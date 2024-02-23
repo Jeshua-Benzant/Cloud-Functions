@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Web Page</title>
+    <style>
+        /* Add your CSS styles here */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
+        h1 {
+            /* Style for the main header */
+            font-size: 24px;
+            color: #333;
+        }
+
+        #header {
+            /* Style for the additional header */
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Welcome to My Web Page</h1>
+    <div id="thunkableApp"></div>
+    <div id="header">Profile App Data</div>
+    <div id="profileTable"></div>
+    <script>
+        // Add your code to embed the Thunkable app here
+        const thunkableApp = document.getElementById('thunkableApp');
+        thunkableApp.innerHTML = `
+            <iframe src="https://thunkable.site/w/_2tTMHhNJxDX3q58tyC0m" width="420px" height="700px"></iframe>
+        `;
+    </script>
+    <script type="module">
+        
+        // Initialize Firebase
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+        import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtxv8wpyyWqaRhcisdk3qW7t1PCJWnRgY",
+            authDomain: "csc305-15dbe.firebaseapp.com",
+            databaseURL: "https://csc305-15dbe-default-rtdb.firebaseio.com",
+            projectId: "csc305-15dbe",
+            storageBucket: "csc305-15dbe.appspot.com",
+            messagingSenderId: "899209600043",
+            appId: "1:899209600043:web:948e5283201637f7d2de6e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Assuming user profiles are directly under the root directory
+        const userRef = ref(database);
+
+        onValue(userRef, function(snapshot) {
+            console.log("userData retrieved successfully");
+            const users = snapshot.val();
+            const profileTable = document.getElementById('profileTable');
+
+            // Clear existing content
+            profileTable.innerHTML = '';
+
+            if (users) {
+                // Create a table
+                const table = document.createElement('table');
+                table.innerHTML = `
+                    <tr>
+                        <th>Name</th>
+                        <th>Image</th>
+                        <th>Description</th>
+                        <th>Food</th>
+                        <th>Hobby</th>
+                    </tr>`;
+
+                // Iterate through users and populate the table
+                for (const userId in users) {
+                    const userData = users[userId];
+                    table.innerHTML += `
+                        <tr>
+                            <td>${userData.Name || ''}</td>
+                            <td>${userData.Image ? `<img src="${userData.Image}" alt="User Image">` : ''}</td>
+                            <td>${userData.Description || ''}</td>
+                            <td>${userData.Food || ''}</td>
+                            <td>${userData.Hobby || ''}</td>
+                        </tr>`;
+                }
+
+                // Append the table to the profileTable div
+                profileTable.appendChild(table);
+            } else {
+                // Display a message if there are no users
+                profileTable.innerHTML = '<p>No user profiles available.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
