@@ -76,6 +76,18 @@ gtag('consent', 'default', {
             <iframe src="https://thunkable.site/w/_2tTMHhNJxDX3q58tyC0m" width="420px" height="700px"></iframe>
         `;
     </script>
+
+    <script>
+      document.addEventListener('click', function(event) {
+    // Send an event to Google Analytics when a click occurs
+        gtag('event', 'click', {
+          'event_category': 'Mouse Clicks',
+          'event_label': 'Anywhere on Screen'
+        });
+      });
+    </script>
+
+    
     <script type="module">
         
         // Initialize Firebase
